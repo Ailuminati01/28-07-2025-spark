@@ -455,7 +455,7 @@ export function UploadInterface() {
         metadata: {
           processingMethod: 'ai-openai-template-mapped',
           layout: [],
-          tables: selectedTempDoc.azureAIResult?.tables || [],
+          tables: [],
           documentMetadata: {
             templateMatched: selectedTempDoc.suggestedTemplate?.name,
             templateConfidence: selectedTempDoc.confidence,
