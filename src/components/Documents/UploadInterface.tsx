@@ -417,7 +417,7 @@ export function UploadInterface() {
         templateVersion: 'v1.0',
         tags: [
           selectedTempDoc.suggestedTemplate?.id || 'unknown',
-          'ollama-processed',
+          'ai-processed',
           'openai-analyzed',
           'clerk-approved',
           'template-mapped',
