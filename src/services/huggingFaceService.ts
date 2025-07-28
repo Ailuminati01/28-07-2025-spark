@@ -229,16 +229,23 @@ Document text: ${text}`,
   async checkServiceHealth(): Promise<boolean> {
     try {
       // Test the HuggingFace API with a simple request
-      const response = await this.hf.textGeneration({
-        model: this.model,
-        inputs: 'Test connection',
-        parameters: {
-          max_new_tokens: 5,
-          temperature: 0.1
-        }
+      const response = await fetch(`https://api-inference.huggingface.co/models/${this.model}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.apiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          inputs: 'Test connection',
+          parameters: {
+            max_new_tokens: 5,
+            temperature: 0.1,
+            return_full_text: false
+          }
+        })
       });
 
-      return response && response.generated_text !== undefined;
+      return response.ok;
     } catch (error) {
       console.error('HuggingFace service health check failed:', error);
       return false;
