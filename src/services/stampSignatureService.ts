@@ -1,16 +1,25 @@
 import { securityService } from './securityService';
 
+interface DateInformation {
+  Date: string | null;
+  Format: string | null;
+  Confidence: number;
+  ExtractedFromText: string | null;
+}
+
 interface StampDetectionResult {
   Status: 'Present' | 'Absent';
   Coordinates: [number, number, number, number] | null;
   Type?: string;
   Confidence?: number;
+  DateInfo?: DateInformation;
 }
 
 interface SignatureDetectionResult {
   Status: 'Present' | 'Absent';
   Coordinates: [number, number, number, number] | null;
   Confidence?: number;
+  DateInfo?: DateInformation;
 }
 
 interface StampSignatureAnalysisResult {
@@ -19,6 +28,12 @@ interface StampSignatureAnalysisResult {
   StampValidation: 'Y' | 'N';
   MatchedStampType?: string;
   ProcessingTime: number;
+  DateAnalysis: {
+    StampDate: DateInformation | null;
+    SignatureDate: DateInformation | null;
+    DocumentDate: DateInformation | null;
+    DateConsistency: 'Consistent' | 'Inconsistent' | 'Unknown';
+  };
 }
 
 // Master list of official stamps
