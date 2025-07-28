@@ -48,19 +48,19 @@ export function UploadInterface() {
 
   const checkServiceHealth = async () => {
     try {
-      const azureHealth = await azureAIService.checkServiceHealth();
+      const huggingFaceHealth = await huggingFaceService.checkServiceHealth();
       const openAIHealth = await openAIService.checkServiceHealth();
       const ollamaHealth = await ollamaService.checkServiceHealth();
       const supabaseHealthCheck = await supabaseService.checkConnection();
       const stampServiceHealth = await stampSignatureService.checkServiceHealth();
       
-      setAzureServiceHealth(azureHealth);
+      setHuggingFaceServiceHealth(huggingFaceHealth);
       setOpenAIServiceHealth(openAIHealth);
       setOllamaServiceHealth(ollamaHealth);
       setSupabaseHealth(supabaseHealthCheck);
       
       console.log('Service Health Check Results:', {
-        azure: azureHealth,
+        huggingFace: huggingFaceHealth,
         openAI: openAIHealth,
         ollama: ollamaHealth,
         supabase: supabaseHealthCheck,
@@ -68,7 +68,7 @@ export function UploadInterface() {
       });
     } catch (error) {
       console.error('Service health check failed:', error);
-      setAzureServiceHealth(false);
+      setHuggingFaceServiceHealth(false);
       setOpenAIServiceHealth(false);
       setOllamaServiceHealth(false);
       setSupabaseHealth(false);
