@@ -741,11 +741,11 @@ export function UploadInterface() {
               <FileImage className="mx-auto h-12 w-12 text-gray-400" />
               <h3 className="mt-2 text-sm font-medium text-gray-900">Upload Document</h3>
               <p className="mt-1 text-sm text-gray-500">
-                Select a document for intelligent processing with template mapping and database sync
+                Select a document for intelligent processing with HuggingFace, OpenAI template mapping and database sync
               </p>
-              {ollamaServiceHealth && openAIServiceHealth && (
+              {(huggingFaceServiceHealth || ollamaServiceHealth) && openAIServiceHealth && (
                 <p className="mt-1 text-xs text-blue-600">
-                  Ollama moondream + OpenAI analysis + Automatic template field mapping + Supabase sync
+                  HuggingFace Gemma-3-12B-IT + Ollama fallback + OpenAI analysis + Automatic template field mapping + Supabase sync
                 </p>
               )}
               <div className="mt-6 flex justify-center space-x-4">
