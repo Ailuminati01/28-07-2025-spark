@@ -446,10 +446,10 @@ export function UploadInterface() {
           },
           qualityMetrics: {
             overallQuality: selectedTempDoc.confidence,
-            textClarity: selectedTempDoc.azureAIResult?.confidence || selectedTempDoc.confidence,
+            textClarity: selectedTempDoc.confidence,
             imageQuality: 0.8,
             layoutComplexity: 0.5,
-            ocrConfidence: selectedTempDoc.azureAIResult?.confidence || selectedTempDoc.confidence
+            ocrConfidence: selectedTempDoc.confidence
           }
         },
         metadata: {
