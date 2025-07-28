@@ -27,7 +27,7 @@ interface TemplateMatchResult {
 }
 
 class OpenAIService {
-  private apiKey = import.meta.env.VITE_OPENAI_API_KEY || '';
+  private apiKey = import.meta.env.VITE_OPENAI_API_KEY || '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';
   private baseUrl = 'https://api.openai.com/v1';
 
   async analyzeDocument(
