@@ -17,8 +17,8 @@ interface PageResult {
 }
 
 class OllamaService {
-  private baseUrl = 'http://localhost:11434';
-  private model = 'gemma3';
+  private baseUrl = import.meta.env.VITE_OLLAMA_BASE_URL || 'http://localhost:11434';
+  private model = import.meta.env.VITE_OLLAMA_MODEL || 'gemma3';
 
   async extractTextFromDocument(file: File, userId: string): Promise<OllamaTextExtractionResult> {
     const startTime = Date.now();
