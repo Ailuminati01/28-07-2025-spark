@@ -732,7 +732,7 @@ export function UploadInterface() {
           <h2 className="text-xl font-semibold text-gray-900">Document Upload & Processing</h2>
           <div className="flex items-center space-x-2 text-xs text-blue-600">
             <Zap className="h-4 w-4" />
-            <span>Ollama + OpenAI + Template Mapping + Database Sync</span>
+            <span>HuggingFace Gemma-3-12B-IT + Ollama Fallback + OpenAI + Template Mapping + Database Sync</span>
           </div>
         </div>
         
