@@ -190,17 +190,37 @@ export function UploadInterface() {
     if (!user) return;
     
     setIsProcessing(true);
-    setProcessingStage('Initializing Ollama processing...');
+    setProcessingStage('Initializing processing...');
     
     try {
-      // Step 1: Ollama text extraction using moondream
-      setProcessingStage('Extracting text with Ollama moondream...');
-      const ollamaResult: OllamaTextExtractionResult = await ollamaService.extractTextFromDocument(file, user.id);
+      // Step 1: Try HuggingFace text extraction first
+      setProcessingStage('Extracting text with HuggingFace Gemma-3-12B-IT...');
+      let textExtractionResult: HuggingFaceResult | null = null;
+      let extractedText = '';
+      
+      try {
+        textExtractionResult = await huggingFaceService.extractTextFromDocument(file, user.id);
+        extractedText = textExtractionResult.extractedText;
+        console.log('HuggingFace extraction successful');
+      } catch (hfError) {
+        console.warn('HuggingFace extraction failed, falling back to Ollama:', hfError);
+        
+        // Fallback to Ollama if HuggingFace fails
+        setProcessingStage('Fallback: Extracting text with Ollama...');
+        try {
+          const ollamaResult = await ollamaService.extractTextFromDocument(file, user.id);
+          extractedText = ollamaResult.extractedText;
+          console.log('Ollama fallback successful');
+        } catch (ollamaError) {
+          console.error('Both HuggingFace and Ollama failed:', ollamaError);
+          throw new Error('Text extraction failed with both services');
+        }
+      }
 
       // Step 2: OpenAI analysis with template matching
       setProcessingStage('Analyzing document and mapping fields with OpenAI...');
       const openAIResult: OpenAIAnalysisResult = await openAIService.analyzeDocument(
-        ollamaResult.extractedText,
+        extractedText,
         documentTypes,
         user.id
       );
@@ -212,25 +232,32 @@ export function UploadInterface() {
       // Step 4: Store in temporary cache
       setProcessingStage('Storing for review...');
       
-      // Convert Ollama result to Azure format for compatibility
-      const compatibleResult = {
-        extractedText: ollamaResult.extractedText,
-        confidence: ollamaResult.confidence,
-        pages: ollamaResult.pages.map(page => ({
+      // Convert result to compatible format for temporary storage
+      const compatibleResult = textExtractionResult ? {
+        extractedText: textExtractionResult.extractedText,
+        confidence: textExtractionResult.confidence,
+        pages: textExtractionResult.pages.map(page => ({
           pageNumber: page.pageNumber,
           width: page.width,
           height: page.height,
-          lines: [{ content: page.extractedText, boundingBox: [] }],
-          words: []
+          lines: page.lines,
+          words: page.words
         })),
         tables: [],
         keyValuePairs: [],
-        processingTime: ollamaResult.processingTime
+        processingTime: textExtractionResult.processingTime
+      } : {
+        extractedText: extractedText,
+        confidence: 0.7,
+        pages: [{ pageNumber: 1, width: 800, height: 600, lines: [{ content: extractedText, boundingBox: [] }], words: [] }],
+        tables: [],
+        keyValuePairs: [],
+        processingTime: 0
       };
 
       const tempDocId = temporaryStorageService.storeTemporaryDocument(
         file,
-        ollamaResult.extractedText,
+        extractedText,
         compatibleResult,
         openAIResult,
         user.id,
@@ -241,14 +268,6 @@ export function UploadInterface() {
       
       // Refresh temporary documents list
       loadTemporaryDocuments();
-      
-      // Don't reset form immediately - keep preview visible
-      // User can select another file or the preview will be cleared when they do
-      // setSelectedFile(null);
-      // setPreviewUrl('');
-      // if (fileInputRef.current) {
-      //   fileInputRef.current.value = '';
-      // }
       
     } catch (error) {
       console.error('Document processing failed:', error);
