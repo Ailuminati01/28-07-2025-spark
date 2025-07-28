@@ -621,6 +621,20 @@ export function UploadInterface() {
     <div className="space-y-6">
       {/* Service Status */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className={`rounded-lg p-4 ${getServiceStatusColor(huggingFaceServiceHealth)}`}>
+          <div className="flex items-center">
+            <Cpu className={`h-5 w-5 mr-2 ${getServiceStatusIcon(huggingFaceServiceHealth)}`} />
+            <div>
+              <p className={`text-sm font-medium ${getServiceStatusIcon(huggingFaceServiceHealth).replace('text-', 'text-')}`}>
+                {getServiceStatusText(huggingFaceServiceHealth, 'HuggingFace')}
+              </p>
+              <p className={`text-xs ${getServiceStatusIcon(huggingFaceServiceHealth).replace('text-', 'text-').replace('600', '700')}`}>
+                {huggingFaceServiceHealth === null ? 'Checking gemma-3-12b-it...' : huggingFaceServiceHealth ? 'Ready for text extraction' : 'AI model unavailable'}
+              </p>
+            </div>
+          </div>
+        </div>
+
         <div className={`rounded-lg p-4 ${getServiceStatusColor(ollamaServiceHealth)}`}>
           <div className="flex items-center">
             <Zap className={`h-5 w-5 mr-2 ${getServiceStatusIcon(ollamaServiceHealth)}`} />
@@ -629,7 +643,7 @@ export function UploadInterface() {
                 {getServiceStatusText(ollamaServiceHealth, 'Ollama')}
               </p>
               <p className={`text-xs ${getServiceStatusIcon(ollamaServiceHealth).replace('text-', 'text-').replace('600', '700')}`}>
-                {ollamaServiceHealth === null ? 'Verifying moondream model...' : ollamaServiceHealth ? 'Ready for text extraction' : 'Moondream model unavailable'}
+                {ollamaServiceHealth === null ? 'Verifying gemma3 model...' : ollamaServiceHealth ? 'Ready for local processing' : 'Local model unavailable'}
               </p>
             </div>
           </div>
@@ -637,56 +651,14 @@ export function UploadInterface() {
 
         <div className={`rounded-lg p-4 ${getServiceStatusColor(openAIServiceHealth)}`}>
           <div className="flex items-center">
-            <Cpu className={`h-5 w-5 mr-2 ${getServiceStatusIcon(openAIServiceHealth)}`} />
+            <Box className={`h-5 w-5 mr-2 ${getServiceStatusIcon(openAIServiceHealth)}`} />
             <div>
               <p className={`text-sm font-medium ${getServiceStatusIcon(openAIServiceHealth).replace('text-', 'text-')}`}>
                 {getServiceStatusText(openAIServiceHealth, 'OpenAI')}
               </p>
               <p className={`text-xs ${getServiceStatusIcon(openAIServiceHealth).replace('text-', 'text-').replace('600', '700')}`}>
-                {openAIServiceHealth === null ? 'Verifying service connection...' : openAIServiceHealth ? 'Ready for template mapping' : 'AI analysis unavailable'}
+                {openAIServiceHealth === null ? 'Verifying service connection...' : openAIServiceHealth ? 'Ready for template mapping' : 'AI mapping unavailable'}
               </p>
-            </div>
-          </div>
-        </div>
-
-        <div className={`rounded-lg p-4 ${getServiceStatusColor(supabaseHealth)}`}>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <Database className={`h-5 w-5 mr-2 ${getServiceStatusIcon(supabaseHealth)}`} />
-              <div>
-                <p className={`text-sm font-medium ${getServiceStatusIcon(supabaseHealth).replace('text-', 'text-')}`}>
-                  {getServiceStatusText(supabaseHealth, 'Supabase')}
-                </p>
-                <p className={`text-xs ${getServiceStatusIcon(supabaseHealth).replace('text-', 'text-').replace('600', '700')}`}>
-                  {supabaseHealth === null ? 'Checking database...' : supabaseHealth ? 'Database ready' : 'Using local storage'}
-                </p>
-              </div>
-            </div>
-            <div className="flex space-x-1">
-              <button
-                onClick={testSupabaseConnection}
-                disabled={isTesting}
-                className="inline-flex items-center px-2 py-1 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
-                title="Test Connection"
-              >
-                {isTesting ? (
-                  <Loader2 className="h-3 w-3 animate-spin" />
-                ) : (
-                  <TestTube className="h-3 w-3" />
-                )}
-              </button>
-              <button
-                onClick={syncToSupabase}
-                disabled={isSyncing}
-                className="inline-flex items-center px-2 py-1 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
-                title="Sync to Supabase"
-              >
-                {isSyncing ? (
-                  <Loader2 className="h-3 w-3 animate-spin" />
-                ) : (
-                  <Sync className="h-3 w-3" />
-                )}
-              </button>
             </div>
           </div>
         </div>
